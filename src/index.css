@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  /* Core Deep Backgrounds */
+  --color-cyber-black: #030712; /* Deep Slate 950 base */
+  --color-cyber-slate: #111827; /* Slate 900 for surfaces/cards */
+  
+  /* Catchy Accent Colors */
+  --color-cyber-cyan: #22d3ee;  /* Bright Cyan - primary accent */
+  --color-cyber-magenta: #c084fc; /* Bright Purple - secondary accent */
+  --color-cyber-blue: #3b82f6; /* Trusty blue */
+  --color-cyber-green: #10b981; /* Success active state */
+  
+  /* Typography Variables */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Fira Code', monospace;
+  --font-display: 'Saira Stencil One', 'Inter', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-cyber-black text-slate-100 font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+  }
+  
+  .glass-card {
+    background: rgba(17, 24, 39, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  /* Sophisticated mesh/glow background behind main elements */
+  .bg-mesh-glow {
+    background-image: radial-gradient(at 0% 0%, rgba(34, 211, 238, 0.15) 0px, transparent 50%),
+                      radial-gradient(at 100% 100%, rgba(192, 132, 252, 0.15) 0px, transparent 50%);
+  }
+}
