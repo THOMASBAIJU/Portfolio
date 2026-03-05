@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
 @theme {
   /* Core Deep Backgrounds */
   --color-cyber-black: #030712;
@@ -43,8 +48,7 @@
   }
   .text-glow-magenta {
     text-shadow: 0 0 15px rgba(192, 132, 252, 0.45);
-  }
-  .text-glow-green {
+  }  .text-glow-green {
     text-shadow: 0 0 15px rgba(16, 185, 129, 0.45);
   }
 

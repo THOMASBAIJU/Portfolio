@@ -133,13 +133,17 @@ function renderCursorHead(ctx: CanvasRenderingContext2D, mx: number, my: number,
 
 /* ── Component ──────────────────────────────────────────────── */
 export default function StarBackground() {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const bgCanvasRef = useRef<HTMLCanvasElement>(null);
+    const cursorCanvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
+        const bgCanvas = bgCanvasRef.current;
+        const cursorCanvas = cursorCanvasRef.current;
+        if (!bgCanvas || !cursorCanvas) return;
+
+        const bgCtx = bgCanvas.getContext('2d');
+        const cursorCtx = cursorCanvas.getContext('2d');
+        if (!bgCtx || !cursorCtx) return;
 
         let animId: number;
         let stars: Star[] = [];
@@ -151,9 +155,11 @@ export default function StarBackground() {
 
         /* Resize */
         const resize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            stars = Array.from({ length: STAR_COUNT }, () => makeStar(canvas.width, canvas.height));
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+            cursorCanvas.width = window.innerWidth;
+            cursorCanvas.height = window.innerHeight;
+            stars = Array.from({ length: STAR_COUNT }, () => makeStar(bgCanvas.width, bgCanvas.height));
         };
         resize();
 
@@ -171,12 +177,14 @@ export default function StarBackground() {
 
         /* Main loop */
         const draw = () => {
-            const { width, height } = canvas;
-            ctx.clearRect(0, 0, width, height);
+            const { width, height } = bgCanvas;
+            bgCtx.clearRect(0, 0, width, height);
+            cursorCtx.clearRect(0, 0, width, height);
 
-            renderStars(ctx, stars, width, height);
+            /* Render ambient stars to background canvas */
+            renderStars(bgCtx, stars, width, height);
 
-            /* Emit sparkles when mouse is on screen */
+            /* Render cursor and sparkles to foreground canvas */
             if (mouseX !== SENTINEL) {
                 const dx = mouseX - prevX;
                 const dy = mouseY - prevY;
@@ -198,10 +206,10 @@ export default function StarBackground() {
                 prevX = mouseX;
                 prevY = mouseY;
 
-                renderSparkles(ctx, sparkles);
+                renderSparkles(cursorCtx, sparkles);
 
                 headRot += 0.04;
-                renderCursorHead(ctx, mouseX, mouseY, headRot);
+                renderCursorHead(cursorCtx, mouseX, mouseY, headRot);
             }
 
             animId = requestAnimationFrame(draw);
@@ -219,10 +227,19 @@ export default function StarBackground() {
     }, []);
 
     return (
-        <canvas
-            ref={canvasRef}
-            className="fixed inset-0 w-full h-full pointer-events-none z-0"
-            aria-hidden="true"
-        />
+        <>
+            {/* Background ambient stars (sits behind UI) */}
+            <canvas
+                ref={bgCanvasRef}
+                className="fixed inset-0 w-full h-full pointer-events-none z-0"
+                aria-hidden="true"
+            />
+            {/* Foreground cursor and sparkles (sits above UI) */}
+            <canvas
+                ref={cursorCanvasRef}
+                className="fixed inset-0 w-full h-full pointer-events-none z-[9999]"
+                aria-hidden="true"
+            />
+        </>
     );
 }
