@@ -1,0 +1,5 @@
+
+> portfolio@0.0.0 build
+> tsc -b && vite build
+
+src/components/Hero.tsx(1,18): error TS6133: 'AnimatePresence' is declared but its value is never read.

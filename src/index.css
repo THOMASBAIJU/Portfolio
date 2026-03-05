@@ -2,15 +2,15 @@
 
 @theme {
   /* Core Deep Backgrounds */
-  --color-cyber-black: #030712; /* Deep Slate 950 base */
-  --color-cyber-slate: #111827; /* Slate 900 for surfaces/cards */
-  
+  --color-cyber-black: #030712;
+  --color-cyber-slate: #111827;
+
   /* Catchy Accent Colors */
-  --color-cyber-cyan: #22d3ee;  /* Bright Cyan - primary accent */
-  --color-cyber-magenta: #c084fc; /* Bright Purple - secondary accent */
-  --color-cyber-blue: #3b82f6; /* Trusty blue */
-  --color-cyber-green: #10b981; /* Success active state */
-  
+  --color-cyber-cyan: #22d3ee;
+  --color-cyber-magenta: #c084fc;
+  --color-cyber-blue: #3b82f6;
+  --color-cyber-green: #10b981;
+
   /* Typography Variables */
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-mono: 'Fira Code', monospace;
@@ -21,24 +21,136 @@
   body {
     @apply bg-cyber-black text-slate-100 font-sans antialiased;
   }
+
+  /* Hide native cursor ONLY once the canvas custom cursor is confirmed running.
+     If JS fails, the class is never added and the native cursor still shows. */
+  html.custom-cursor-active *,
+  html.custom-cursor-active body {
+    cursor: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 }
 
 @layer utilities {
+  /* ── Glow text ── */
   .text-glow {
-    text-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+    text-shadow: 0 0 15px rgba(34, 211, 238, 0.45);
   }
-  
+  .text-glow-magenta {
+    text-shadow: 0 0 15px rgba(192, 132, 252, 0.45);
+  }
+  .text-glow-green {
+    text-shadow: 0 0 15px rgba(16, 185, 129, 0.45);
+  }
+
+  /* ── Glassmorphism card ── */
   .glass-card {
-    background: rgba(17, 24, 39, 0.4);
+    background: rgba(17, 24, 39, 0.45);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
   }
 
-  /* Sophisticated mesh/glow background behind main elements */
+  /* ── Mesh glow background ── */
   .bg-mesh-glow {
-    background-image: radial-gradient(at 0% 0%, rgba(34, 211, 238, 0.15) 0px, transparent 50%),
-                      radial-gradient(at 100% 100%, rgba(192, 132, 252, 0.15) 0px, transparent 50%);
+    background-image:
+      radial-gradient(at 0% 0%, rgba(34, 211, 238, 0.15) 0px, transparent 55%),
+      radial-gradient(at 100% 100%, rgba(192, 132, 252, 0.15) 0px, transparent 55%);
   }
+
+  /* ── Animated gradient text ── */
+  .animate-gradient-text {
+    background-size: 200% auto;
+    animation: gradient-shift 4s linear infinite;
+  }
+
+  /* ── Shine sweep on hover ── */
+  .shine-effect {
+    position: relative;
+    overflow: hidden;
+  }
+  .shine-effect::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 60%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.7s ease;
+  }
+  .shine-effect:hover::after {
+    transform: translateX(100%);
+  }
+
+  /* ── Card glow on hover ── */
+  .card-hover-glow {
+    transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+  }
+  .card-hover-glow:hover {
+    box-shadow:
+      0 0 0 1px rgba(34, 211, 238, 0.25),
+      0 20px 60px rgba(34, 211, 238, 0.1),
+      0 8px 32px rgba(0, 0, 0, 0.4);
+    transform: translateY(-3px);
+  }
+
+  /* ── Pulsing green availability badge ── */
+  .pulse-badge::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: inherit;
+    background: rgba(16, 185, 129, 0.3);
+    animation: pulse-ring 2s ease-out infinite;
+  }
+
+  /* ── Floating particle dot ── */
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.4;
+    animation: float-particle 8s ease-in-out infinite;
+  }
+}
+
+/* ── Keyframes ── */
+@keyframes gradient-shift {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+@keyframes float-particle {
+  0%, 100% { transform: translateY(0)   rotate(0deg); }
+  33%       { transform: translateY(-30px) rotate(120deg); }
+  66%       { transform: translateY(15px)  rotate(240deg); }
+}
+
+@keyframes typewriter-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
 }
